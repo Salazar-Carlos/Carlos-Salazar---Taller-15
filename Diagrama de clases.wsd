@@ -1,0 +1,80 @@
+@startuml
+package "model" {
+
+class Docente {
+    ID string
+    Nombre string
+    Departamento string
+    Cargo string
+}
+
+class Competencia {
+    ID string
+    Nombre string
+    Tipo string
+}
+
+class Evaluacion {
+    ID string
+    DocenteID string
+    CompetenciaID string
+    PuntajeBase float64
+    PuntajeFinal float64
+}
+
+}
+
+package "strategy" {
+
+class Contexto {
+    Docente Docente
+    Competencia Competencia
+    Evaluacion Evaluacion
+    ReglasAplicadas []string
+}
+
+interface EstrategiaPonderacion {
+    Calcular(ctx Contexto) float64
+    Aplica(ctx Contexto) bool
+    Nombre() string
+    Prioridad() int
+}
+
+class ReglaCienciasInvestigacion
+class ReglaDirectorGestion
+class ReglaAntiguedad
+class ReglaCoordinadorAcademica
+class ReglaAdministracionGestion
+
+EstrategiaPonderacion <|.. ReglaCienciasInvestigacion
+EstrategiaPonderacion <|.. ReglaDirectorGestion
+EstrategiaPonderacion <|.. ReglaAntiguedad
+EstrategiaPonderacion <|.. ReglaCoordinadorAcademica
+EstrategiaPonderacion <|.. ReglaAdministracionGestion
+
+}
+
+package "engine" {
+
+class CalculadorReglas {
+    estrategias []EstrategiaPonderacion
+    CalcularPuntajeConReglas()
+}
+
+class ReporteGenerator {
+    GenerarReporteJustificado()
+}
+
+}
+
+CalculadorReglas *-- EstrategiaPonderacion
+CalculadorReglas *-- Contexto
+
+Contexto *-- Docente
+Contexto *-- Competencia
+Contexto *-- Evaluacion
+
+ReporteGenerator ..> CalculadorReglas
+ReporteGenerator ..> Contexto
+
+@enduml
